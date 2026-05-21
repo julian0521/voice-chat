@@ -1,31 +1,34 @@
-name: 05 - CI
+name: 06 - Deploy Firebase Hosting
 
 on:
   push:
-    branches: [main, develop]
-
-  pull_request:
-    branches: [main, develop]
+    branches:
+      - main
 
 jobs:
-  ci:
+  deploy:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Descargar código del repositorio
-        uses: actions/checkout@v4
+      - name: Descargar código
+        uses: actions/checkout@v6
 
       - name: Configurar Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 25
           cache: npm
 
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Ejecutar lint
-        run: npm run lint
-
-      - name: Build
+      - name: Ejecutar build
         run: npm run build
+
+      - name: Deploy a Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          channelId: live
+          projectId: voice-chat-129c4

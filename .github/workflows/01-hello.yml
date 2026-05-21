@@ -1,31 +1,30 @@
-name: 05 - CI
+name: 01 - Hello
 
-on:
-  push:
-    branches: [main, develop]
-
-  pull_request:
-    branches: [main, develop]
+on: 
+    # push:
+    #     branches: [main,develop]
+    workflow_dispatch:
 
 jobs:
-  ci:
-    runs-on: ubuntu-24.04
+    hello: 
+        runs-on: ubuntu-24.04
 
-    steps:
-      - name: Descargar código del repositorio
-        uses: actions/checkout@v4
+        steps:
+            - name: Saludar
+              run: echo "Hola desde github actions"
+            
+            - name: Ver fecha del runner
+              run: date
 
-      - name: Configurar Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 25
-          cache: npm
+            - name: Ver archivos disponibles
+              run: ls -la
+    
+    repo-files:
+        runs-on: ubuntu-24.04
 
-      - name: Instalar dependencias
-        run: npm ci
+        steps:
+            - name: Descargar código del repositoririo
+              uses: actions/checkout@v6
 
-      - name: Ejecutar lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
+            - name: Ver archivos del repositorio
+              run: ls -la
