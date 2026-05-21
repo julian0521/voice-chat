@@ -1,31 +1,33 @@
 name: 04 - Events
 
 on:
-  issues:
-    types: [opened, edited, closed, reopened]
-  issue_comment:
+    issues:
+        types: [opened, edited, closed, reopened]
+    issue_comment:
+permissions:
+    issues: write
 
 jobs:
-  inspect-event:
-    runs-on: ubuntu-24.04
+    inspect-event:
+        runs-on: ubuntu-24.04
 
-    steps:
-      - name: Mostrar información del evento
-        run: |
-          echo "Evento: ${{ github.event_name }}"
-          echo "Acción: ${{ github.event.action }}"
-          echo "Número de issue: ${{ github.event.issue.number }}"
-          echo "Título de issue: ${{ github.event.issue.title }}"
-          echo "Comentario: ${{ github.event.comment.body }}"
+        steps:
+            - name: Mostrar información del evento
+              run: |
+                  echo "Evento: ${{ github.event_name }}"
+                  echo "Acción: ${{ github.event.action }}"
+                  echo "Número de issue: ${{ github.event.issue.number }}"
+                  echo "Título de issue: ${{ github.event.issue.title }}"
+                  echo "Comentario: ${{ github.event.comment.body }}"
 
-      - name: Comentar automáticamente en un nuevo issue
-        if: ${{ github.event_name == 'issues' && github.event.action == 'opened' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
+            - name: Comentar automáticamente en un nuevo issue
+              if: ${{ github.event_name == 'issues' && github.event.action == 'opened' }}
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  ISSUE_NUMBER: ${{ github.event.issue.number }}
+                  GITHUB_REPOSITORY: ${{ github.repository }}
 
-        run: |
-          gh issue comment $ISSUE_NUMBER \
-            --repo $GITHUB_REPOSITORY \
-            --body "¡Gracias por abrir este issue! Un miembro del equipo lo revisará pronto."
+              run: |
+                  gh issue comment $ISSUE_NUMBER \
+                    --repo $GITHUB_REPOSITORY \
+                    --body "¡Gracias por abrir este issue! Un miembro del equipo lo revisará pronto."
