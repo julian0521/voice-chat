@@ -6,7 +6,7 @@ on:
 
 jobs:
     hello: 
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-24.04
 
         steps:
             - name: Saludar
@@ -16,4 +16,14 @@ jobs:
               run: date
 
             - name: Ver archivos disponibles
-              run: ls -la   
+              run: ls -la
+    
+    repo-files:
+        runs-on: ubuntu-24.04
+
+        steps:
+            - name: Descargar código del repositoririo
+              uses: actions/checkout@v6
+
+            - name: Ver archivos del repositorio
+              run: ls -la
