@@ -1,0 +1,52 @@
+name: 02 - Manual
+on:
+    workflow_dispatch:
+      inputs:
+        log_level:
+          description: 'Nivel de log'
+          required: true
+          default: 'info'
+          type: choice
+          options:
+            - debug
+            - info
+            - warning
+            - error
+
+        environment:
+            description: LOG_LEVEL
+            type: environment
+
+        dry_run:
+          description: '¿Ejecutar en modo dry-run?'
+          required: true
+          default: false
+          type: boolean  
+        
+        reason:
+          description: 'Motivo de la ejecución'
+          required: false
+          default: ''
+          type: string  
+jobs:
+    manual:
+        runs-on: ubuntu-24.04
+
+        steps:
+            - name: Mostrat todos los inputs
+              env: 
+                LOG_LEVEL: ${{ github.event.inputs.log_level }}
+                DRY_RUN: ${{ github.event.inputs.dry_run }}
+                REASON: ${{ github.event.inputs.reason }}
+              run: |
+                echo "Log Level: $LOG_LEVEL"
+                echo "Environment: $ENVIRONMENT"
+                echo "Dry Run: $DRY_RUN"
+                echo "Reason: $REASON"
+            
+            - name: Deploy (solo si no es dry-run)
+              if: ${{ !github.event.inputs.dry_run }}
+              env: 
+                ENVIRONMENT: ${{ github.event.inputs.environment }}
+              run: | 
+                echo "DEPLOY TO $ENVIRONMENT" 
